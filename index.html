@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0047AB">
+<meta name="author" content="Tomas Magnani Moles">
+<title>CURSA</title>
+<style>
+  :root {
+    --cobalt: #0047AB;
+    --cobalt-dark: #003380;
+    --cobalt-light: #E6EEF9;
+    --text: #1A1F2B;
+    --muted: #6B7280;
+    --bg: #F4F6FA;
+    --card: #FFFFFF;
+    --border: #DDE3EE;
+    --danger: #C0392B;
+    --ok: #1E8449;
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); overflow-x: hidden;
+  }
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    background: var(--cobalt); color: #fff;
+    padding: calc(var(--safe-t) + 14px) 18px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  header h1 { font-size: 22px; letter-spacing: 3px; font-weight: 800; }
+  header small { opacity: .85; font-size: 12px; }
+  main { padding: calc(var(--safe-t) + 74px) 14px calc(var(--safe-b) + 100px); max-width: 720px; margin: 0 auto; }
+  h2 { font-size: 17px; margin: 18px 4px 10px; color: var(--cobalt-dark); }
+  .tabbar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+    display: flex; background: #fff; border-top: 1px solid var(--border);
+    padding-bottom: var(--safe-b);
+  }
+  .tabbar button {
+    flex: 1; border: none; background: none; color: var(--muted);
+    padding: 10px 0 8px; font-size: 12px; font-weight: 600;
+    display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer;
+  }
+  .tabbar button .ico { font-size: 20px; }
+  .tabbar button.active { color: var(--cobalt); }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .dot { width: 14px; height: 14px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .grow { flex: 1; min-width: 0; }
+  .title { font-weight: 700; font-size: 16px; }
+  .meta { color: var(--muted); font-size: 14px; margin-top: 3px; line-height: 1.4; }
+  .tag { display: inline-block; background: var(--cobalt-light); color: var(--cobalt); font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; margin-top: 7px; }
+  .tag.past { background: #EEF0F3; color: var(--muted); }
+  .tag.soon { background: #FDECEA; color: var(--danger); }
+  .promo-ok { color: var(--ok); font-weight: 700; }
+  .promo-no { color: var(--danger); font-weight: 700; }
+  .actions { display: flex; flex-direction: column; gap: 4px; }
+  .actions button { background: none; border: none; font-size: 13px; color: var(--muted); padding: 6px; cursor: pointer; }
+  .actions button:active { color: var(--cobalt); }
+  .empty { text-align: center; color: var(--muted); padding: 28px 12px; font-size: 15px; line-height: 1.5; }
+  .btn { background: var(--cobalt); color: #fff; border: none; padding: 13px 18px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 16px; }
+  .btn:active { background: var(--cobalt-dark); }
+  .btn.ghost { background: transparent; color: var(--cobalt); border: 1px solid var(--cobalt); }
+  .btn.danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+  .btn.full { width: 100%; margin-top: 10px; }
+  .btn.half { flex: 1; }
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-top: 10px; }
+  label { display: block; font-size: 14px; font-weight: 600; margin: 14px 0 6px; }
+  input, select, textarea {
+    width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px;
+    font-size: 16px; font-family: inherit; background: #fff; color: var(--text);
+    -webkit-appearance: none; appearance: none;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--cobalt); border-color: transparent; }
+  textarea { resize: vertical; min-height: 72px; }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; min-width: 0; }
+  .colors { display: flex; gap: 10px; flex-wrap: wrap; }
+  .colors button { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; }
+  .colors button.sel { border-color: var(--text); box-shadow: 0 0 0 2px #fff inset; }
+  .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+  .seg button {
+    padding: 9px 13px; border-radius: 10px; border: 1px solid var(--border); background: #fff;
+    cursor: pointer; font-size: 14px; color: var(--text);
+  }
+  .seg button.sel { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
+  .check { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; margin: 4px 0; }
+  .check input { width: 22px; height: 22px; accent-color: var(--cobalt); flex-shrink: 0; }
+  .info { background: var(--cobalt-light); color: var(--cobalt-dark); border-radius: 12px; padding: 12px 14px; font-size: 14px; margin-top: 12px; line-height: 1.5; }
+  .hidden { display: none !important; }
+  .fab {
+    position: fixed; right: 18px; bottom: calc(var(--safe-b) + 84px); z-index: 9;
+    background: var(--cobalt); color: #fff; border: none; border-radius: 999px;
+    padding: 15px 22px; font-weight: 700; font-size: 16px; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,71,171,.35);
+  }
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 50;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .modal {
+    background: #fff; width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto;
+    border-radius: 20px 20px 0 0; padding: 20px 18px calc(var(--safe-b) + 22px);
+  }
+  .modal h3 { color: var(--cobalt-dark); font-size: 20px; }
+  .toast {
+    position: fixed; left: 50%; bottom: calc(var(--safe-b) + 150px); transform: translateX(-50%);
+    background: var(--text); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 14px;
+    opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 99;
+    width: max-content; max-width: 90vw; text-align: center; line-height: 1.4;
+  }
+  .toast.show { opacity: 1; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin: 30px 0 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>CURSA</h1>
+    <small>Agenda de parciales</small>
+  </div>
+</header>
+
+<main>
+  <!-- PARCIALES -->
+  <section id="tab-parciales">
+    <h2>Próximos</h2>
+    <div id="listProximos"></div>
+    <h2>Anteriores</h2>
+    <div id="listAnteriores"></div>
+  </section>
+
+  <!-- MATERIAS -->
+  <section id="tab-materias" class="hidden">
+    <h2>Mis materias</h2>
+    <div id="listMaterias"></div>
+    <div class="panel">
+      <h2 style="margin:0 0 4px">Nueva materia</h2>
+      <label for="matNombre">Nombre</label>
+      <input id="matNombre" placeholder="Ej: Análisis Matemático II">
+      <label>Color</label>
+      <div class="colors" id="matColors"></div>
+      <label>¿Es promocionable?</label>
+      <div class="seg" id="mPromo"></div>
+      <div id="mPromoBox" class="hidden">
+        <label for="mNotaPromo">¿Con cuánto se promociona?</label>
+        <input type="number" id="mNotaPromo" min="0" max="10" step="0.5" inputmode="decimal" placeholder="Ej: 7">
+      </div>
+      <button class="btn full" onclick="guardarMateria()">Guardar materia</button>
+    </div>
+  </section>
+
+  <!-- AJUSTES -->
+  <section id="tab-ajustes" class="hidden">
+    <h2>Notificaciones</h2>
+    <div class="panel">
+      <label class="check">
+        <input type="checkbox" id="notifChk" onchange="toggleNotif(this.checked)">
+        Avisarme antes de cada parcial
+      </label>
+      <div class="info">Recibís avisos 7 días antes, 5 días antes, 3 días antes (09:00 hs) y la noche anterior (20:00 hs). Llegan a la pantalla de bloqueo aunque la app esté cerrada.</div>
+    </div>
+    <h2>Datos</h2>
+    <div class="panel">
+      <button class="btn ghost full" onclick="exportar()">Exportar datos (JSON)</button>
+      <button class="btn danger full" onclick="borrarTodo()">Borrar todos los datos</button>
+    </div>
+    <footer>CURSA · Desarrollada por Tomas Magnani Moles</footer>
+  </section>
+</main>
+
+<button class="fab" id="fab" onclick="abrirModalParcial()">+ Parcial</button>
+
+<nav class="tabbar">
+  <button class="active" data-tab="parciales" onclick="showTab('parciales')"><span class="ico">📅</span>Parciales</button>
+  <button data-tab="materias" onclick="showTab('materias')"><span class="ico">📚</span>Materias</button>
+  <button data-tab="ajustes" onclick="showTab('ajustes')"><span class="ico">⚙️</span>Ajustes</button>
+</nav>
+
+<!-- MODAL PARCIAL -->
+<div class="modal-bg hidden" id="modalParcial">
+  <div class="modal">
+    <h3 id="modalTitulo">Agregar parcial</h3>
+    <label for="pMateria">Materia</label>
+    <select id="pMateria"></select>
+    <label>Tipo</label>
+    <div class="seg" id="pTipo"></div>
+    <div id="pTPBox" class="hidden">
+      <label>Trabajo práctico</label>
+      <div class="seg" id="pTPSub"></div>
+    </div>
+    <label>Modalidad</label>
+    <div class="seg" id="pModalidad"></div>
+    <div class="row">
+      <div><label for="pFecha">Fecha</label><input type="date" id="pFecha"></div>
+      <div><label for="pHora">Hora</label><input type="time" id="pHora"></div>
+    </div>
+    <label for="pAula">Aula o link</label>
+    <input id="pAula" placeholder="Ej: Aula 3B o https://meet...">
+    <label for="pTemas">Temas</label>
+    <textarea id="pTemas" placeholder="Unidades, capítulos, temas a estudiar"></textarea>
+    <label for="pNota">Nota obtenida (cuando la tengas)</label>
+    <input type="number" id="pNota" min="0" max="10" step="0.5" inputmode="decimal" placeholder="Ej: 8">
+    <div class="row" style="margin-top:20px">
+      <button class="btn ghost half" onclick="cerrarModalParcial()">Cancelar</button>
+      <button class="btn half" onclick="guardarParcial()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECUPERATORIO -->
+<div class="modal-bg hidden" id="modalRecu">
+  <div class="modal">
+    <h3>Recuperatorio</h3>
+    <p class="meta">Sacaste menos de 4. ¿Cuándo es el recuperatorio? Se copian los temas y datos del parcial.</p>
+    <label for="recuFecha">Fecha</label>
+    <input type="date" id="recuFecha">
+    <label for="recuHora">Hora</label>
+    <input type="time" id="recuHora">
+    <div class="row" style="margin-top:20px">
+      <button class="btn ghost half" onclick="cerrarRecu()">Ahora no</button>
+      <button class="btn half" onclick="confirmarRecuperatorio()">Crear</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  // ===================== CONSTANTES =====================
+  const COLORES = ['#0047AB','#E74C3C','#27AE60','#F39C12','#8E44AD','#16A085','#D35400','#2C3E50'];
+  const TIPOS = ['1er parcial','2do parcial','Recuperatorio 1er parcial','Recuperatorio 2do parcial','Final','Trabajo práctico'];
+  const TP_SUB = ['Oral','Escrito'];
+  const MODALIDADES = ['Presencial','Virtual'];
+  const KEY = 'cursa_datos_v3';
+  const KEY_V2 = 'cursa_datos_v2';
+  const ALERTAS = [
+    { k: '7',     dias: 7, hora: '09:00', texto: 'en 7 días' },
+    { k: '5',     dias: 5, hora: '09:00', texto: 'en 5 días' },
+    { k: '3',     dias: 3, hora: '09:00', texto: 'en 3 días' },
+    { k: 'noche', dias: 1, hora: '20:00', texto: 'es mañana' }
+  ];
+
+  // ===================== ESTADO =====================
+  let datos = cargar();
+  let colorSeleccionado = COLORES[0];
+  let promoSel = null;
+  let tipoSel = TIPOS[0];
+  let tpSub = TP_SUB[0];
+  let modalidadSel = MODALIDADES[0];
+  let editandoId = null;
+  let recuRef = null;
+
+  function normalizar(d) {
+    return {
+      materias: (d.materias || []).map(m => ({ promocionable: false, notaPromo: null, ...m })),
+      parciales: (d.parciales || []).map(p => ({ avisos: {}, notifIds: [], ...p })),
+      notif: !!d.notif,
+      nextNid: d.nextNid || 1000
+    };
+  }
+  function cargar() {
+    for (const k of [KEY, KEY_V2]) {
+      try {
+        const d = JSON.parse(localStorage.getItem(k));
+        if (d && Array.isArray(d.materias)) return normalizar(d);
+      } catch (e) {}
+    }
+    return normalizar({});
+  }
+  function guardar() { localStorage.setItem(KEY, JSON.stringify(datos)); }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function nuevoNid() { datos.nextNid = (datos.nextNid || 1000) + 1; return datos.nextNid; }
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function toast(msg, ms = 2200) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms);
+  }
+  function materia(mid) { return datos.materias.find(m => m.id === mid); }
+  function fechaDia(p) { return new Date(p.fecha + 'T00:00'); }
+  function fechaHora(p) { return new Date(`${p.fecha}T${p.hora || '00:00'}`); }
+  function formatear(p) {
+    return fechaDia(p).toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short' }) +
+      (p.hora ? ' · ' + p.hora + ' hs' : '');
+  }
+  function diasRestantes(p) {
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    return Math.round((fechaDia(p) - hoy) / 86400000);
+  }
+  function horaAlerta(p, al) {
+    const f = fechaDia(p);
+    f.setDate(f.getDate() - al.dias);
+    const [h, mi] = al.hora.split(':');
+    f.setHours(+h, +mi, 0, 0);
+    return f;
+  }
+
+  // ===================== PROMOCIÓN =====================
+  function estadoPromo(mid) {
+    const m = materia(mid);
+    if (!m || !m.promocionable) return null;
+    const notas = datos.parciales
+      .filter(p => p.materiaId === mid && p.nota !== '' && p.nota != null)
+      .map(p => Number(p.nota));
+    if (!notas.length) return { sinNotas: true, min: m.notaPromo };
+    const prom = notas.reduce((a, b) => a + b, 0) / notas.length;
+    return { prom, min: m.notaPromo, ok: prom >= m.notaPromo, cant: notas.length };
+  }
+
+  // ===================== NOTIFICACIONES =====================
+  // Plugin nativo de Capacitor (solo en la app instalada)
+  function LN() {
+    const C = window.Capacitor;
+    return C && C.isNativePlatform && C.isNativePlatform() ? C.Plugins.LocalNotifications : null;
+  }
+  function esNativo() { return !!LN(); }
+
+  async function pedirPermisos() {
+    const ln = LN();
+    if (ln) {
+      const r = await ln.requestPermissions();
+      if (r.display !== 'granted') return false;
+      try {
+        await ln.createChannel({
+          id: 'cursa', name: 'Parciales', description: 'Avisos de parciales',
+          importance: 5, visibility: 1, vibration: true
+        });
+      } catch (e) {}
+      return true;
+    }
+    if (!('Notification' in window)) return false;
+    if (Notification.permission === 'granted') return true;
+    if (Notification.permission === 'denied') return false;
+    return (await Notification.requestPermission()) === 'granted';
+  }
+
+  async function cancelarAvisos(p) {
+    const ln = LN();
+    if (ln && p.notifIds && p.notifIds.length) {
+      try { await ln.cancel({ notifications: p.notifIds.map(id => ({ id })) }); } catch (e) {}
+    }
+    p.notifIds = [];
+  }
+
+  async function programarAvisos(p) {
+    await cancelarAvisos(p);
+    const ln = LN();
+    if (!ln || !datos.notif) { guardar(); return; }
+    const m = materia(p.materiaId);
+    const ahora = new Date();
+    const lista = [];
+    ALERTAS.forEach(al => {
+      const at = horaAlerta(p, al);
+      if (at <= ahora) return;
+      const id = nuevoNid();
+      p.notifIds.push(id);
+      lista.push({
+        id,
+        title: 'CURSA · ' + (m ? m.nombre : 'Parcial'),
+        body: `${p.tipo} ${al.texto}${p.hora ? ' a las ' + p.hora : ''}`,
+        schedule: { at, allowWhileIdle: true },
+        channelId: 'cursa'
+      });
+    });
+    if (lista.length) {
+      try { await ln.schedule({ notifications: lista }); } catch (e) { console.warn(e); }
+    }
+    guardar();
+  }
+
+  async function reprogramarTodo() {
+    for (const p of datos.parciales) {
+      if (fechaHora(p) >= new Date()) await programarAvisos(p);
+      else await cancelarAvisos(p);
+    }
+    guardar();
+  }
+
+  // Respaldo para navegador: avisos mientras la página esté abierta
+  function avisosWeb() {
+    if (esNativo() || !datos.notif || !('Notification' in window) || Notification.permission !== 'granted') return;
+    const ahora = new Date();
+    let cambio = false;
+    datos.parciales.forEach(p => {
+      if (fechaHora(p) < ahora) return;
+      const m = materia(p.materiaId);
+      const pendientes = ALERTAS.filter(al => !p.avisos[al.k] && horaAlerta(p, al) <= ahora);
+      if (!pendientes.length) return;
+      const al = pendientes[pendientes.length - 1];
+      new Notification('CURSA · ' + (m ? m.nombre : 'Parcial'), {
+        body: `${p.tipo} ${al.texto}${p.hora ? ' a las ' + p.hora : ''}`
+      });
+      pendientes.forEach(x => p.avisos[x.k] = true);
+      cambio = true;
+    });
+    if (cambio) guardar();
+  }
+
+  // ===================== TABS =====================
+  window.showTab = function(tab) {
+    ['parciales', 'materias', 'ajustes'].forEach(t =>
+      document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab));
+    document.querySelectorAll('.tabbar button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    document.getElementById('fab').classList.toggle('hidden', tab !== 'parciales');
+    window.scrollTo(0, 0);
+    render();
+  };
+
+  // ===================== RENDER =====================
+  function tarjetaParcial(p, pasado) {
+    const m = materia(p.materiaId);
+    const dias = diasRestantes(p);
+    let estado;
+    if (pasado) estado = `<span class="tag past">Realizado</span>`;
+    else if (dias === 0) estado = `<span class="tag soon">Hoy</span>`;
+    else if (dias <= 3) estado = `<span class="tag soon">En ${dias} ${dias === 1 ? 'día' : 'días'}</span>`;
+    else estado = `<span class="tag">En ${dias} días</span>`;
+    const nota = p.nota !== '' && p.nota != null
+      ? ` · Nota: <strong>${esc(p.nota)}</strong>${Number(p.nota) < 4 ? ' <span class="promo-no">(desaprobado)</span>' : ''}` : '';
+    return `
+      <div class="card">
+        <div class="dot" style="background:${m ? m.color : '#999'}"></div>
+        <div class="grow">
+          <div class="title">${esc(m ? m.nombre : 'Materia eliminada')}</div>
+          <div class="meta"><strong>${esc(p.tipo)}</strong></div>
+          <div class="meta">${formatear(p)} · ${esc(p.modalidad)}${nota}</div>
+          ${p.aula ? `<div class="meta">📍 ${esc(p.aula)}</div>` : ''}
+          ${p.temas ? `<div class="meta">${esc(p.temas)}</div>` : ''}
+          ${estado}
+        </div>
+        <div class="actions">
+          <button onclick="editarParcial('${p.id}')">Editar</button>
+          <button onclick="eliminarParcial('${p.id}')">Borrar</button>
+        </div>
+      </div>`;
+  }
+
+  function renderParciales() {
+    const prox = document.getElementById('listProximos');
+    const ant = document.getElementById('listAnteriores');
+    const ordenados = [...datos.parciales].sort((a, b) => fechaHora(a) - fechaHora(b));
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const proximos = ordenados.filter(p => fechaDia(p) >= hoy);
+    const anteriores = ordenados.filter(p => fechaDia(p) < hoy).reverse();
+
+    if (!datos.materias.length) {
+      prox.innerHTML = '<div class="empty">Para empezar, cargá tus materias en la pestaña Materias. Después podés agregar tus parciales.</div>';
+    } else {
+      prox.innerHTML = proximos.length ? proximos.map(p => tarjetaParcial(p, false)).join('')
+        : '<div class="empty">No tenés parciales próximos.</div>';
+    }
+    ant.innerHTML = anteriores.length ? anteriores.map(p => tarjetaParcial(p, true)).join('')
+      : '<div class="empty">Todavía no hay parciales anteriores.</div>';
+  }
+
+  function lineaPromo(m) {
+    if (!m.promocionable) return `<div class="meta">No promocionable</div>`;
+    const st = estadoPromo(m.id);
+    if (st.sinNotas) return `<div class="meta">Promociona con ${m.notaPromo}. Cargá notas para calcular el promedio.</div>`;
+    const estado = st.ok
+      ? `<span class="promo-ok">Está en condición de promocionar</span>`
+      : `<span class="promo-no">Todavía no promociona (mínimo ${m.notaPromo})</span>`;
+    return `<div class="meta">Promedio: <strong>${st.prom.toFixed(2)}</strong> (${st.cant} nota${st.cant > 1 ? 's' : ''})</div>
+            <div class="meta">${estado}</div>`;
+  }
+
+  function renderMaterias() {
+    const cont = document.getElementById('listMaterias');
+    cont.innerHTML = datos.materias.length ? datos.materias.map(m => `
+      <div class="card">
+        <div class="dot" style="background:${m.color}"></div>
+        <div class="grow">
+          <div class="title">${esc(m.nombre)}</div>
+          <div class="meta">${datos.parciales.filter(p => p.materiaId === m.id).length} parcial(es)</div>
+          ${lineaPromo(m)}
+        </div>
+        <div class="actions"><button onclick="eliminarMateria('${m.id}')">Borrar</button></div>
+      </div>`).join('')
+      : '<div class="empty">Todavía no cargaste materias.</div>';
+
+    document.getElementById('matColors').innerHTML = COLORES.map(c =>
+      `<button style="background:${c}" class="${c === colorSeleccionado ? 'sel' : ''}" onclick="elegirColor('${c}')" aria-label="Color"></button>`
+    ).join('');
+    renderFormPromo();
+  }
+
+  function render() {
+    renderParciales();
+    renderMaterias();
+    document.getElementById('notifChk').checked = !!datos.notif;
+  }
+
+  // ===================== MATERIAS =====================
+  function renderFormPromo() {
+    document.getElementById('mPromo').innerHTML = [{ v: true, t: 'Sí' }, { v: false, t: 'No' }]
+      .map(o => `<button class="${promoSel === o.v ? 'sel' : ''}" onclick="setPromo(${o.v})">${o.t}</button>`).join('');
+    document.getElementById('mPromoBox').classList.toggle('hidden', promoSel !== true);
+  }
+  window.setPromo = v => { promoSel = v; renderFormPromo(); };
+  window.elegirColor = c => { colorSeleccionado = c; renderMaterias(); };
+
+  window.guardarMateria = function() {
+    const nombre = document.getElementById('matNombre').value.trim();
+    if (!nombre) return toast('Escribí un nombre para la materia');
+    if (promoSel === null) return toast('Indicá si la materia es promocionable');
+    let notaPromo = null;
+    if (promoSel) {
+      const v = document.getElementById('mNotaPromo').value;
+      if (v === '') return toast('Indicá con cuánto se promociona');
+      notaPromo = Number(v);
+    }
+    datos.materias.push({ id: uid(), nombre, color: colorSeleccionado, promocionable: promoSel, notaPromo });
+    guardar();
+    document.getElementById('matNombre').value = '';
+    document.getElementById('mNotaPromo').value = '';
+    promoSel = null;
+    toast('Materia guardada');
+    render();
+  };
+
+  window.eliminarMateria = async function(mid) {
+    if (!confirm('¿Borrar la materia y sus parciales?')) return;
+    for (const p of datos.parciales.filter(x => x.materiaId === mid)) await cancelarAvisos(p);
+    datos.materias = datos.materias.filter(m => m.id !== mid);
+    datos.parciales = datos.parciales.filter(p => p.materiaId !== mid);
+    guardar(); render();
+  };
+
+  // ===================== PARCIALES: FORMULARIO =====================
+  function renderSelectsTipo() {
+    document.getElementById('pTipo').innerHTML = TIPOS.map(t =>
+      `<button class="${t === tipoSel ? 'sel' : ''}" onclick="setTipo('${t}')">${t}</button>`).join('');
+    document.getElementById('pTPBox').classList.toggle('hidden', tipoSel !== 'Trabajo práctico');
+    document.getElementById('pTPSub').innerHTML = TP_SUB.map(s =>
+      `<button class="${s === tpSub ? 'sel' : ''}" onclick="setTPSub('${s}')">${s}</button>`).join('');
+    document.getElementById('pModalidad').innerHTML = MODALIDADES.map(m =>
+      `<button class="${m === modalidadSel ? 'sel' : ''}" onclick="setModalidad('${m}')">${m}</button>`).join('');
+  }
+  window.setTipo = t => { tipoSel = t; renderSelectsTipo(); };
+  window.setTPSub = s => { tpSub = s; renderSelectsTipo(); };
+  window.setModalidad = m => { modalidadSel = m; renderSelectsTipo(); };
+
+  window.abrirModalParcial = function(p = null) {
+    if (!datos.materias.length) {
+      showTab('materias');
+      return toast('Primero cargá una materia');
+    }
+    editandoId = p ? p.id : null;
+    document.getElementById('modalTitulo').textContent = p ? 'Editar parcial' : 'Agregar parcial';
+    if (p && p.tipo.startsWith('Trabajo práctico')) {
+      tipoSel = 'Trabajo práctico';
+      tpSub = p.tipo.includes('Oral') ? 'Oral' : 'Escrito';
+    } else {
+      tipoSel = p ? p.tipo : TIPOS[0];
+      tpSub = TP_SUB[0];
+    }
+    modalidadSel = p ? p.modalidad : MODALIDADES[0];
+    document.getElementById('pMateria').innerHTML =
+      datos.materias.map(m => `<option value="${m.id}">${esc(m.nombre)}</option>`).join('');
+    renderSelectsTipo();
+    document.getElementById('pMateria').value = p ? p.materiaId : datos.materias[0].id;
+    document.getElementById('pFecha').value = p ? p.fecha : '';
+    document.getElementById('pHora').value = p ? p.hora : '';
+    document.getElementById('pAula').value = p ? p.aula : '';
+    document.getElementById('pTemas').value = p ? p.temas : '';
+    document.getElementById('pNota').value = p && p.nota !== '' && p.nota != null ? p.nota : '';
+    document.getElementById('modalParcial').classList.remove('hidden');
+  };
+  window.cerrarModalParcial = () => document.getElementById('modalParcial').classList.add('hidden');
+  window.editarParcial = pid => abrirModalParcial(datos.parciales.find(p => p.id === pid));
+
+  window.guardarParcial = async function() {
+    const f = document.getElementById('pFecha').value;
+    if (!f) return toast('Elegí una fecha');
+    const tipo = tipoSel === 'Trabajo práctico' ? `Trabajo práctico (${tpSub})` : tipoSel;
+    const notaRaw = document.getElementById('pNota').value;
+    const data = {
+      materiaId: document.getElementById('pMateria').value,
+      tipo,
+      modalidad: modalidadSel,
+      fecha: f,
+      hora: document.getElementById('pHora').value,
+      aula: document.getElementById('pAula').value.trim(),
+      temas: document.getElementById('pTemas').value.trim(),
+      nota: notaRaw === '' ? '' : Number(notaRaw)
+    };
+
+    let parcial;
+    if (editandoId) {
+      parcial = datos.parciales.find(p => p.id === editandoId);
+      const cambioFecha = parcial.fecha !== data.fecha || parcial.hora !== data.hora;
+      Object.assign(parcial, data);
+      if (cambioFecha) parcial.avisos = {};
+    } else {
+      parcial = { id: uid(), avisos: {}, notifIds: [], ...data };
+      datos.parciales.push(parcial);
+    }
+    guardar();
+    await programarAvisos(parcial);
+    cerrarModalParcial();
+    render();
+
+    // Promoción
+    const m = materia(data.materiaId);
+    if (m && m.promocionable && data.nota !== '') {
+      const st = estadoPromo(m.id);
+      toast(st.ok
+        ? `Promedio ${st.prom.toFixed(2)}: estás en condición de promocionar ✅`
+        : `Promedio ${st.prom.toFixed(2)}: todavía no alcanzás ${m.notaPromo} para promocionar`, 4000);
+    } else {
+      toast('Parcial guardado');
+    }
+
+    // Recuperatorio si desaprobó un parcial
+    const esParcial = /^(1er|2do) parcial$/.test(tipo);
+    if (esParcial && data.nota !== '' && data.nota < 4 &&
+        !datos.parciales.some(x => x.recuperaDe === parcial.id)) {
+      setTimeout(() => preguntarRecuperatorio(parcial), 400);
+    }
+  };
+
+  window.eliminarParcial = async function(pid) {
+    if (!confirm('¿Borrar este parcial?')) return;
+    const p = datos.parciales.find(x => x.id === pid);
+    if (p) await cancelarAvisos(p);
+    datos.parciales = datos.parciales.filter(x => x.id !== pid);
+    guardar(); render();
+  };
+
+  // ===================== RECUPERATORIO =====================
+  function preguntarRecuperatorio(parcial) {
+    recuRef = parcial.id;
+    document.getElementById('recuFecha').value = '';
+    document.getElementById('recuHora').value = '';
+    document.getElementById('modalRecu').classList.remove('hidden');
+  }
+  window.cerrarRecu = () => document.getElementById('modalRecu').classList.add('hidden');
+
+  window.confirmarRecuperatorio = async function() {
+    const f = document.getElementById('recuFecha').value;
+    if (!f) return toast('Elegí la fecha del recuperatorio');
+    const orig = datos.parciales.find(p => p.id === recuRef);
+    if (!orig) return cerrarRecu();
+    const base = orig.tipo.replace(/^Recuperatorio /, '');
+    const rec = {
+      id: uid(), avisos: {}, notifIds: [],
+      materiaId: orig.materiaId,
+      tipo: 'Recuperatorio ' + base,
+      modalidad: orig.modalidad,
+      fecha: f,
+      hora: document.getElementById('recuHora').value,
+      aula: orig.aula,
+      temas: orig.temas,
+      nota: '',
+      recuperaDe: orig.id
+    };
+    datos.parciales.push(rec);
+    guardar();
+    await programarAvisos(rec);
+    cerrarRecu(); render();
+    toast('Recuperatorio agendado con los temas del parcial');
+  };
+
+  // ===================== AJUSTES =====================
+  window.toggleNotif = async function(on) {
+    if (on) {
+      const ok = await pedirPermisos();
+      if (!ok) {
+        datos.notif = false; guardar(); render();
+        return toast('Permitilas en Ajustes del teléfono para recibir avisos');
+      }
+      datos.notif = true; guardar();
+      await reprogramarTodo();
+      toast('Avisos activados');
+    } else {
+      datos.notif = false; guardar();
+      for (const p of datos.parciales) await cancelarAvisos(p);
+      guardar();
+      toast('Avisos desactivados');
+    }
+  };
+
+  window.exportar = function() {
+    const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'cursa-datos.json'; a.click();
+  };
+
+  window.borrarTodo = async function() {
+    if (!confirm('¿Borrar TODOS los datos? Esta acción no se puede deshacer.')) return;
+    for (const p of datos.parciales) await cancelarAvisos(p);
+    datos = normalizar({});
+    guardar(); render(); toast('Datos borrados');
+  };
+
+  // ===================== INICIO =====================
+  window.addEventListener('load', async () => {
+    showTab('parciales');
+    if (esNativo() && datos.notif) await reprogramarTodo();
+    avisosWeb();
+    setInterval(avisosWeb, 15 * 60 * 1000);
+  });
+})();
+</script>
+</body>
+</html>
