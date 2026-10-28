@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#0047AB">
 <meta name="author" content="Tomas Magnani Moles">
 <title>CURSA</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-512.png">
 <style>
   :root {
     --cobalt: #0047AB;
@@ -715,4 +718,5 @@
 })();
 </script>
 </body>
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
 </html>
