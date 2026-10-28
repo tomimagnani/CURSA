@@ -6,9 +6,6 @@
 <meta name="theme-color" content="#0047AB">
 <meta name="author" content="Tomas Magnani Moles">
 <title>CURSA</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" href="icon-512.png">
 <style>
   :root {
     --cobalt: #0047AB;
@@ -26,36 +23,17 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
-  body {
-    font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg); color: var(--text); overflow-x: hidden;
-  }
-  header {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
-    background: var(--cobalt); color: #fff;
-    padding: calc(var(--safe-t) + 14px) 18px 14px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
+  body { font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--cobalt); color: #fff; padding: calc(var(--safe-t) + 14px) 18px 14px; display: flex; justify-content: space-between; align-items: center; }
   header h1 { font-size: 22px; letter-spacing: 3px; font-weight: 800; }
   header small { opacity: .85; font-size: 12px; }
   main { padding: calc(var(--safe-t) + 74px) 14px calc(var(--safe-b) + 100px); max-width: 720px; margin: 0 auto; }
   h2 { font-size: 17px; margin: 18px 4px 10px; color: var(--cobalt-dark); }
-  .tabbar {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
-    display: flex; background: #fff; border-top: 1px solid var(--border);
-    padding-bottom: var(--safe-b);
-  }
-  .tabbar button {
-    flex: 1; border: none; background: none; color: var(--muted);
-    padding: 10px 0 8px; font-size: 12px; font-weight: 600;
-    display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer;
-  }
+  .tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; display: flex; background: #fff; border-top: 1px solid var(--border); padding-bottom: var(--safe-b); }
+  .tabbar button { flex: 1; border: none; background: none; color: var(--muted); padding: 10px 0 8px; font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
   .tabbar button .ico { font-size: 20px; }
   .tabbar button.active { color: var(--cobalt); }
-  .card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-    padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start;
-  }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
   .dot { width: 14px; height: 14px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
   .grow { flex: 1; min-width: 0; }
   .title { font-weight: 700; font-size: 16px; }
@@ -77,11 +55,7 @@
   .btn.half { flex: 1; }
   .panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-top: 10px; }
   label { display: block; font-size: 14px; font-weight: 600; margin: 14px 0 6px; }
-  input, select, textarea {
-    width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px;
-    font-size: 16px; font-family: inherit; background: #fff; color: var(--text);
-    -webkit-appearance: none; appearance: none;
-  }
+  input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 16px; font-family: inherit; background: #fff; color: var(--text); -webkit-appearance: none; appearance: none; }
   input:focus, select:focus, textarea:focus { outline: 2px solid var(--cobalt); border-color: transparent; }
   textarea { resize: vertical; min-height: 72px; }
   .row { display: flex; gap: 10px; }
@@ -90,36 +64,17 @@
   .colors button { width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; }
   .colors button.sel { border-color: var(--text); box-shadow: 0 0 0 2px #fff inset; }
   .seg { display: flex; gap: 8px; flex-wrap: wrap; }
-  .seg button {
-    padding: 9px 13px; border-radius: 10px; border: 1px solid var(--border); background: #fff;
-    cursor: pointer; font-size: 14px; color: var(--text);
-  }
+  .seg button { padding: 9px 13px; border-radius: 10px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 14px; color: var(--text); }
   .seg button.sel { background: var(--cobalt); color: #fff; border-color: var(--cobalt); }
   .check { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; margin: 4px 0; }
   .check input { width: 22px; height: 22px; accent-color: var(--cobalt); flex-shrink: 0; }
   .info { background: var(--cobalt-light); color: var(--cobalt-dark); border-radius: 12px; padding: 12px 14px; font-size: 14px; margin-top: 12px; line-height: 1.5; }
   .hidden { display: none !important; }
-  .fab {
-    position: fixed; right: 18px; bottom: calc(var(--safe-b) + 84px); z-index: 9;
-    background: var(--cobalt); color: #fff; border: none; border-radius: 999px;
-    padding: 15px 22px; font-weight: 700; font-size: 16px; cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0,71,171,.35);
-  }
-  .modal-bg {
-    position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 50;
-    display: flex; align-items: flex-end; justify-content: center;
-  }
-  .modal {
-    background: #fff; width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto;
-    border-radius: 20px 20px 0 0; padding: 20px 18px calc(var(--safe-b) + 22px);
-  }
+  .fab { position: fixed; right: 18px; bottom: calc(var(--safe-b) + 84px); z-index: 9; background: var(--cobalt); color: #fff; border: none; border-radius: 999px; padding: 15px 22px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,71,171,.35); }
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+  .modal { background: #fff; width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; border-radius: 20px 20px 0 0; padding: 20px 18px calc(var(--safe-b) + 22px); }
   .modal h3 { color: var(--cobalt-dark); font-size: 20px; }
-  .toast {
-    position: fixed; left: 50%; bottom: calc(var(--safe-b) + 150px); transform: translateX(-50%);
-    background: var(--text); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 14px;
-    opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 99;
-    width: max-content; max-width: 90vw; text-align: center; line-height: 1.4;
-  }
+  .toast { position: fixed; left: 50%; bottom: calc(var(--safe-b) + 150px); transform: translateX(-50%); background: var(--text); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 14px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 99; width: max-content; max-width: 90vw; text-align: center; line-height: 1.4; }
   .toast.show { opacity: 1; }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin: 30px 0 10px; }
 </style>
@@ -152,6 +107,8 @@
       <input id="matNombre" placeholder="Ej: Análisis Matemático II">
       <label>Color</label>
       <div class="colors" id="matColors"></div>
+      <label>¿Es anual?</label>
+      <div class="seg" id="mAnual"></div>
       <label>¿Es promocionable?</label>
       <div class="seg" id="mPromo"></div>
       <div id="mPromoBox" class="hidden">
@@ -194,7 +151,9 @@
   <div class="modal">
     <h3 id="modalTitulo">Agregar parcial</h3>
     <label for="pMateria">Materia</label>
-    <select id="pMateria"></select>
+    <select id="pMateria" onchange="cambiarMateriaModal()"></select>
+    <label for="pCant">¿Cuántos parciales tiene la materia?</label>
+    <input type="number" id="pCant" min="1" max="10" step="1" inputmode="numeric" value="2" oninput="renderSelectsTipo()">
     <label>Tipo</label>
     <div class="seg" id="pTipo"></div>
     <div id="pTPBox" class="hidden">
@@ -242,23 +201,28 @@
 (() => {
   // ===================== CONSTANTES =====================
   const COLORES = ['#0047AB','#E74C3C','#27AE60','#F39C12','#8E44AD','#16A085','#D35400','#2C3E50'];
-  const TIPOS = ['1er parcial','2do parcial','Recuperatorio 1er parcial','Recuperatorio 2do parcial','Final','Trabajo práctico'];
+  const TP = 'Trabajo práctico';
   const TP_SUB = ['Oral','Escrito'];
   const MODALIDADES = ['Presencial','Virtual'];
-  const KEY = 'cursa_datos_v3';
-  const KEY_V2 = 'cursa_datos_v2';
+  const KEY = 'cursa_datos_v4';
+  const KEYS_VIEJAS = ['cursa_datos_v3', 'cursa_datos_v2'];
   const ALERTAS = [
     { k: '7',     dias: 7, hora: '09:00', texto: 'en 7 días' },
     { k: '5',     dias: 5, hora: '09:00', texto: 'en 5 días' },
     { k: '3',     dias: 3, hora: '09:00', texto: 'en 3 días' },
     { k: 'noche', dias: 1, hora: '20:00', texto: 'es mañana' }
   ];
+  const MIGRAR_TIPOS = {
+    '1er parcial': 'Parcial 1', '2do parcial': 'Parcial 2',
+    'Recuperatorio 1er parcial': 'Recuperatorio 1', 'Recuperatorio 2do parcial': 'Recuperatorio 2'
+  };
 
   // ===================== ESTADO =====================
   let datos = cargar();
   let colorSeleccionado = COLORES[0];
   let promoSel = null;
-  let tipoSel = TIPOS[0];
+  let anualSel = null;
+  let tipoSel = 'Parcial 1';
   let tpSub = TP_SUB[0];
   let modalidadSel = MODALIDADES[0];
   let editandoId = null;
@@ -266,14 +230,17 @@
 
   function normalizar(d) {
     return {
-      materias: (d.materias || []).map(m => ({ promocionable: false, notaPromo: null, ...m })),
-      parciales: (d.parciales || []).map(p => ({ avisos: {}, notifIds: [], ...p })),
+      materias: (d.materias || []).map(m => ({ promocionable: false, notaPromo: null, anual: false, cantParciales: 2, ...m })),
+      parciales: (d.parciales || []).map(p => ({
+        avisos: {}, notifIds: [], ...p,
+        tipo: MIGRAR_TIPOS[p.tipo] || p.tipo
+      })),
       notif: !!d.notif,
       nextNid: d.nextNid || 1000
     };
   }
   function cargar() {
-    for (const k of [KEY, KEY_V2]) {
+    for (const k of [KEY, ...KEYS_VIEJAS]) {
       try {
         const d = JSON.parse(localStorage.getItem(k));
         if (d && Array.isArray(d.materias)) return normalizar(d);
@@ -310,6 +277,14 @@
     f.setHours(+h, +mi, 0, 0);
     return f;
   }
+  // Lista de tipos según la cantidad de parciales de la materia
+  function tiposPara(n) {
+    const a = [];
+    for (let i = 1; i <= n; i++) a.push('Parcial ' + i);
+    for (let i = 1; i <= n; i++) a.push('Recuperatorio ' + i);
+    a.push(TP, 'Final');
+    return a;
+  }
 
   // ===================== PROMOCIÓN =====================
   function estadoPromo(mid) {
@@ -324,7 +299,6 @@
   }
 
   // ===================== NOTIFICACIONES =====================
-  // Plugin nativo de Capacitor (solo en la app instalada)
   function LN() {
     const C = window.Capacitor;
     return C && C.isNativePlatform && C.isNativePlatform() ? C.Plugins.LocalNotifications : null;
@@ -337,10 +311,7 @@
       const r = await ln.requestPermissions();
       if (r.display !== 'granted') return false;
       try {
-        await ln.createChannel({
-          id: 'cursa', name: 'Parciales', description: 'Avisos de parciales',
-          importance: 5, visibility: 1, vibration: true
-        });
+        await ln.createChannel({ id: 'cursa', name: 'Parciales', description: 'Avisos de parciales', importance: 5, visibility: 1, vibration: true });
       } catch (e) {}
       return true;
     }
@@ -392,7 +363,6 @@
     guardar();
   }
 
-  // Respaldo para navegador: avisos mientras la página esté abierta
   function avisosWeb() {
     if (esNativo() || !datos.notif || !('Notification' in window) || Notification.permission !== 'granted') return;
     const ahora = new Date();
@@ -487,7 +457,7 @@
         <div class="dot" style="background:${m.color}"></div>
         <div class="grow">
           <div class="title">${esc(m.nombre)}</div>
-          <div class="meta">${datos.parciales.filter(p => p.materiaId === m.id).length} parcial(es)</div>
+          <div class="meta">${m.anual ? 'Anual' : 'No anual'} · ${m.cantParciales} parcial(es) · ${datos.parciales.filter(p => p.materiaId === m.id).length} cargado(s)</div>
           ${lineaPromo(m)}
         </div>
         <div class="actions"><button onclick="eliminarMateria('${m.id}')">Borrar</button></div>
@@ -497,7 +467,7 @@
     document.getElementById('matColors').innerHTML = COLORES.map(c =>
       `<button style="background:${c}" class="${c === colorSeleccionado ? 'sel' : ''}" onclick="elegirColor('${c}')" aria-label="Color"></button>`
     ).join('');
-    renderFormPromo();
+    renderFormMateria();
   }
 
   function render() {
@@ -507,17 +477,21 @@
   }
 
   // ===================== MATERIAS =====================
-  function renderFormPromo() {
+  function renderFormMateria() {
+    document.getElementById('mAnual').innerHTML = [{ v: true, t: 'Sí' }, { v: false, t: 'No' }]
+      .map(o => `<button class="${anualSel === o.v ? 'sel' : ''}" onclick="setAnual(${o.v})">${o.t}</button>`).join('');
     document.getElementById('mPromo').innerHTML = [{ v: true, t: 'Sí' }, { v: false, t: 'No' }]
       .map(o => `<button class="${promoSel === o.v ? 'sel' : ''}" onclick="setPromo(${o.v})">${o.t}</button>`).join('');
     document.getElementById('mPromoBox').classList.toggle('hidden', promoSel !== true);
   }
-  window.setPromo = v => { promoSel = v; renderFormPromo(); };
+  window.setAnual = v => { anualSel = v; renderFormMateria(); };
+  window.setPromo = v => { promoSel = v; renderFormMateria(); };
   window.elegirColor = c => { colorSeleccionado = c; renderMaterias(); };
 
   window.guardarMateria = function() {
     const nombre = document.getElementById('matNombre').value.trim();
     if (!nombre) return toast('Escribí un nombre para la materia');
+    if (anualSel === null) return toast('Indicá si la materia es anual');
     if (promoSel === null) return toast('Indicá si la materia es promocionable');
     let notaPromo = null;
     if (promoSel) {
@@ -525,11 +499,15 @@
       if (v === '') return toast('Indicá con cuánto se promociona');
       notaPromo = Number(v);
     }
-    datos.materias.push({ id: uid(), nombre, color: colorSeleccionado, promocionable: promoSel, notaPromo });
+    datos.materias.push({
+      id: uid(), nombre, color: colorSeleccionado,
+      anual: anualSel, cantParciales: 2,
+      promocionable: promoSel, notaPromo
+    });
     guardar();
     document.getElementById('matNombre').value = '';
     document.getElementById('mNotaPromo').value = '';
-    promoSel = null;
+    promoSel = null; anualSel = null;
     toast('Materia guardada');
     render();
   };
@@ -543,10 +521,15 @@
   };
 
   // ===================== PARCIALES: FORMULARIO =====================
+  function cantActual() {
+    return Math.max(1, parseInt(document.getElementById('pCant').value, 10) || 1);
+  }
   function renderSelectsTipo() {
-    document.getElementById('pTipo').innerHTML = TIPOS.map(t =>
+    const tipos = tiposPara(cantActual());
+    if (!tipos.includes(tipoSel)) tipoSel = tipos[0];
+    document.getElementById('pTipo').innerHTML = tipos.map(t =>
       `<button class="${t === tipoSel ? 'sel' : ''}" onclick="setTipo('${t}')">${t}</button>`).join('');
-    document.getElementById('pTPBox').classList.toggle('hidden', tipoSel !== 'Trabajo práctico');
+    document.getElementById('pTPBox').classList.toggle('hidden', tipoSel !== TP);
     document.getElementById('pTPSub').innerHTML = TP_SUB.map(s =>
       `<button class="${s === tpSub ? 'sel' : ''}" onclick="setTPSub('${s}')">${s}</button>`).join('');
     document.getElementById('pModalidad').innerHTML = MODALIDADES.map(m =>
@@ -556,6 +539,12 @@
   window.setTPSub = s => { tpSub = s; renderSelectsTipo(); };
   window.setModalidad = m => { modalidadSel = m; renderSelectsTipo(); };
 
+  window.cambiarMateriaModal = function() {
+    const m = materia(document.getElementById('pMateria').value);
+    document.getElementById('pCant').value = m ? m.cantParciales : 2;
+    renderSelectsTipo();
+  };
+
   window.abrirModalParcial = function(p = null) {
     if (!datos.materias.length) {
       showTab('materias');
@@ -563,18 +552,20 @@
     }
     editandoId = p ? p.id : null;
     document.getElementById('modalTitulo').textContent = p ? 'Editar parcial' : 'Agregar parcial';
-    if (p && p.tipo.startsWith('Trabajo práctico')) {
-      tipoSel = 'Trabajo práctico';
+    if (p && p.tipo.startsWith(TP)) {
+      tipoSel = TP;
       tpSub = p.tipo.includes('Oral') ? 'Oral' : 'Escrito';
     } else {
-      tipoSel = p ? p.tipo : TIPOS[0];
+      tipoSel = p ? p.tipo : 'Parcial 1';
       tpSub = TP_SUB[0];
     }
     modalidadSel = p ? p.modalidad : MODALIDADES[0];
     document.getElementById('pMateria').innerHTML =
       datos.materias.map(m => `<option value="${m.id}">${esc(m.nombre)}</option>`).join('');
-    renderSelectsTipo();
     document.getElementById('pMateria').value = p ? p.materiaId : datos.materias[0].id;
+    const m = materia(document.getElementById('pMateria').value);
+    document.getElementById('pCant').value = m ? m.cantParciales : 2;
+    renderSelectsTipo();
     document.getElementById('pFecha').value = p ? p.fecha : '';
     document.getElementById('pHora').value = p ? p.hora : '';
     document.getElementById('pAula').value = p ? p.aula : '';
@@ -588,10 +579,17 @@
   window.guardarParcial = async function() {
     const f = document.getElementById('pFecha').value;
     if (!f) return toast('Elegí una fecha');
-    const tipo = tipoSel === 'Trabajo práctico' ? `Trabajo práctico (${tpSub})` : tipoSel;
+    const cant = parseInt(document.getElementById('pCant').value, 10);
+    if (!cant || cant < 1) return toast('Indicá cuántos parciales tiene la materia');
+
+    const materiaId = document.getElementById('pMateria').value;
+    const m = materia(materiaId);
+    if (m) m.cantParciales = cant;
+
+    const tipo = tipoSel === TP ? `Trabajo práctico (${tpSub})` : tipoSel;
     const notaRaw = document.getElementById('pNota').value;
     const data = {
-      materiaId: document.getElementById('pMateria').value,
+      materiaId,
       tipo,
       modalidad: modalidadSel,
       fecha: f,
@@ -616,8 +614,6 @@
     cerrarModalParcial();
     render();
 
-    // Promoción
-    const m = materia(data.materiaId);
     if (m && m.promocionable && data.nota !== '') {
       const st = estadoPromo(m.id);
       toast(st.ok
@@ -627,8 +623,8 @@
       toast('Parcial guardado');
     }
 
-    // Recuperatorio si desaprobó un parcial
-    const esParcial = /^(1er|2do) parcial$/.test(tipo);
+    // Recuperatorio si desaprobó un Parcial N
+    const esParcial = /^Parcial \d+$/.test(tipo);
     if (esParcial && data.nota !== '' && data.nota < 4 &&
         !datos.parciales.some(x => x.recuperaDe === parcial.id)) {
       setTimeout(() => preguntarRecuperatorio(parcial), 400);
@@ -657,11 +653,11 @@
     if (!f) return toast('Elegí la fecha del recuperatorio');
     const orig = datos.parciales.find(p => p.id === recuRef);
     if (!orig) return cerrarRecu();
-    const base = orig.tipo.replace(/^Recuperatorio /, '');
+    const num = (orig.tipo.match(/(\d+)$/) || [, ''])[1];
     const rec = {
       id: uid(), avisos: {}, notifIds: [],
       materiaId: orig.materiaId,
-      tipo: 'Recuperatorio ' + base,
+      tipo: 'Recuperatorio ' + num,
       modalidad: orig.modalidad,
       fecha: f,
       hora: document.getElementById('recuHora').value,
