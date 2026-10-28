@@ -6,9 +6,6 @@
 <meta name="theme-color" content="#0047AB">
 <meta name="author" content="Tomas Magnani Moles">
 <title>CURSA</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" href="icon-512.png">
 <style>
   :root {
     --cobalt: #0047AB;
@@ -112,6 +109,8 @@
       <div class="colors" id="matColors"></div>
       <label>¿Es anual?</label>
       <div class="seg" id="mAnual"></div>
+	<label for="mCant">¿Cuántos parciales tiene la materia?</label>
+	<input type="number" id="mCant" min="1" max="10" step="1" inputmode="numeric" value="2">
       <label>¿Es promocionable?</label>
       <div class="seg" id="mPromo"></div>
       <div id="mPromoBox" class="hidden">
@@ -156,7 +155,7 @@
     <label for="pMateria">Materia</label>
     <select id="pMateria" onchange="cambiarMateriaModal()"></select>
     <label for="pCant">¿Cuántos parciales tiene la materia?</label>
-    <input type="number" id="pCant" min="1" max="10" step="1" inputmode="numeric" value="2" oninput="renderSelectsTipo()">
+	<input type="number" id="pCant" min="1" max="10" step="1" inputmode="numeric" value="2" oninput="window.renderSelectsTipo()">
     <label>Tipo</label>
     <div class="seg" id="pTipo"></div>
     <div id="pTPBox" class="hidden">
@@ -504,7 +503,7 @@
     }
     datos.materias.push({
       id: uid(), nombre, color: colorSeleccionado,
-      anual: anualSel, cantParciales: 2,
+      anual: anualSel, cantParciales: parseInt(document.getElementById('mCant').value, 10) || 2,
       promocionable: promoSel, notaPromo
     });
     guardar();
@@ -538,7 +537,7 @@
     document.getElementById('pModalidad').innerHTML = MODALIDADES.map(m =>
       `<button class="${m === modalidadSel ? 'sel' : ''}" onclick="setModalidad('${m}')">${m}</button>`).join('');
   }
-  window.setTipo = t => { tipoSel = t; renderSelectsTipo(); };
+  window.renderSelectsTipo = renderSelectsTipo;
   window.setTPSub = s => { tpSub = s; renderSelectsTipo(); };
   window.setModalidad = m => { modalidadSel = m; renderSelectsTipo(); };
 
@@ -718,5 +717,4 @@
 })();
 </script>
 </body>
-<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
 </html>
